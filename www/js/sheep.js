@@ -18,11 +18,27 @@ var GameState = {
 
         this.load.spritesheet('sheep', 'assets/07-sheep_86x87x20.png', 86, 87, 20);
         this.load.image('button', 'assets/arrowButton.png');
+        this.load.image('grass', 'assets/grass2.png');
+        this.load.image('bush', 'assets/bush2.png');
+        this.load.image('flower', 'assets/flower.png');
 
     },
 
     create: function(){
-        this.sheep = this.add.sprite(305, 205, 'sheep');
+        this.add.image(0, 0, 'grass');
+
+        this.flowers = this.add.group(); 
+        this.flowers.enableBody = true;
+        this.flowers.create(340, 204, 'flower');
+        this.flowers.create(501, 405, 'flower');
+        this.flowers.create(204, 701, 'flower');
+        this.flowers.create(392, 924, 'flower');
+        this.flowers.create(130, 1053, 'flower');
+
+        // this.bush = this.add.sprite(340, 204, 'bush');
+        // this.add.sprite(501, 405, 'bush');
+        // this.add.sprite(204, 701, 'bush');
+        this.sheep = this.add.sprite(305, 705, 'sheep');
         this.sheep.animations.add('walk', [5, 6, 7], 6, true);
         this.sheep.animations.add('walkUp', [0, 1, 2], 6, true);
         this.sheep.animations.add('walkDown', [11, 12, 13], 6, true);
@@ -34,12 +50,16 @@ var GameState = {
         this.game.physics.arcade.enable(this.sheep);
         this.sheep.anchor.setTo(0.5);
         
+        this.flowers.setAll('body.immovable', true);
+        this.flowers.setAll('body.allowGravity', false);
+        
         this.sheep.body.collideWorldBounds = true;
         this.sheep.customParams = {direction: 'stop'};
 
     },
 
     update: function(){
+        this.game.physics.arcade.collide(this.sheep, this.flowers);
         
         if(this.cursors.right.isDown || this.sheep.customParams.direction == "right"){
             this.sheep.body.velocity.x = 100;
@@ -70,7 +90,6 @@ var GameState = {
             this.sheep.customParams.direction = 'stop';
         }
         this.leftButton.events.onInputDown.add(function(){
-            console.log('hi');
             this.sheep.customParams.direction = 'left';
           
         }, this);
