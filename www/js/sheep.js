@@ -21,6 +21,7 @@ var GameState = {
         this.load.image('grass', 'assets/grass2.png');
         this.load.image('bush', 'assets/bush2.png');
         this.load.image('flower', 'assets/flower.png');
+        this.load.image('mushroom', 'assets/mushroom.png');
 
     },
 
@@ -35,9 +36,11 @@ var GameState = {
         this.flowers.create(392, 924, 'flower');
         this.flowers.create(130, 1053, 'flower');
 
-        // this.bush = this.add.sprite(340, 204, 'bush');
-        // this.add.sprite(501, 405, 'bush');
-        // this.add.sprite(204, 701, 'bush');
+        this.mushrooms = this.add.group();
+        this.mushrooms.enableBody = true;
+        this.mushrooms.create(104, 104, 'mushroom');
+        this.mushrooms.create(380, 620, 'mushroom');
+
         this.sheep = this.add.sprite(305, 705, 'sheep');
         this.sheep.animations.add('walk', [5, 6, 7], 6, true);
         this.sheep.animations.add('walkUp', [0, 1, 2], 6, true);
@@ -52,6 +55,9 @@ var GameState = {
         
         this.flowers.setAll('body.immovable', true);
         this.flowers.setAll('body.allowGravity', false);
+
+        this.mushrooms.setAll('body.immovable', true);
+        
         
         this.sheep.body.collideWorldBounds = true;
         this.sheep.customParams = {direction: 'stop'};
@@ -60,6 +66,7 @@ var GameState = {
 
     update: function(){
         this.game.physics.arcade.collide(this.sheep, this.flowers);
+        this.game.physics.arcade.collide(this.sheep, this.mushrooms);
         
         if(this.cursors.right.isDown || this.sheep.customParams.direction == "right"){
             this.sheep.body.velocity.x = 100;
