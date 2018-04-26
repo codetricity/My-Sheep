@@ -23,6 +23,10 @@ var GameState = {
         this.load.image('flower', 'assets/flower.png');
         this.load.image('mushroom', 'assets/mushroom.png');
 
+        // load audio
+        this.load.audio('boing', 'assets/sound/boing.wav');
+        this.sound.setDecodedCallback([this.boing], this.create, this);
+
     },
 
     create: function(){
@@ -50,6 +54,10 @@ var GameState = {
         this.rightButton = this.add.button(600, 1005, 'button');
         this.leftButton = this.add.button(390, 1005, 'button');
 
+        // add audio
+        this.boing = this.add.audio('boing');
+        this.boing.volume = 0.3;  // between 0 and 1
+
         this.game.physics.arcade.enable(this.sheep);
         this.sheep.anchor.setTo(0.5);
         
@@ -65,7 +73,9 @@ var GameState = {
     },
 
     update: function(){
-        this.game.physics.arcade.collide(this.sheep, this.flowers);
+        this.game.physics.arcade.collide(this.sheep, this.flowers, function(){
+            this.boing.play();
+        }, null, this);
         this.game.physics.arcade.collide(this.sheep, this.mushrooms);
         
         if(this.cursors.right.isDown || this.sheep.customParams.direction == "right"){
