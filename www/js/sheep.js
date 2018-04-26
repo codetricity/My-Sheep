@@ -25,8 +25,9 @@ var GameState = {
 
         // load audio
         this.load.audio('boing', 'assets/sound/boing.wav');
-        this.sound.setDecodedCallback([this.boing], this.create, this);
-
+        this.load.audio('farm', 'assets/sound/farm-shorter.wav');
+        // download independent music https://www.jamendo.com/
+        this.load.audio('backgroundMusic', 'assets/sound/inspirational_lullaby.mp3');
     },
 
     create: function(){
@@ -54,10 +55,20 @@ var GameState = {
         this.rightButton = this.add.button(600, 1005, 'button');
         this.leftButton = this.add.button(390, 1005, 'button');
 
-        // add audio
+        // add audio sound effects
         this.boing = this.add.audio('boing');
         this.boing.volume = 0.3;  // between 0 and 1
+        this.farm = this.add.audio('farm');
+        this.farm.volume = 1.0;
 
+        // background music
+        this.backgroundMusic = this.add.audio('backgroundMusic');
+        this.backgroundMusic.volume = 0.2;
+
+        // play background music
+        this.backgroundMusic.play();
+
+        // configure physics
         this.game.physics.arcade.enable(this.sheep);
         this.sheep.anchor.setTo(0.5);
         
@@ -76,7 +87,9 @@ var GameState = {
         this.game.physics.arcade.collide(this.sheep, this.flowers, function(){
             this.boing.play();
         }, null, this);
-        this.game.physics.arcade.collide(this.sheep, this.mushrooms);
+        this.game.physics.arcade.collide(this.sheep, this.mushrooms, function(){
+            this.farm.play();
+        }, null, this);
         
         if(this.cursors.right.isDown || this.sheep.customParams.direction == "right"){
             this.sheep.body.velocity.x = 100;
